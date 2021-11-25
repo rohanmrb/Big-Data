@@ -2,8 +2,9 @@ from pyspark import SparkContext
 from pyspark.sql import SQLContext
 from pyspark.streaming import StreamingContext
 from pyspark.ml import Pipeline
-from pyspark.ml.feature import HashingTF, IDF, Tokenizer
+from pyspark.ml.feature import HashingTF, IDF, Tokenizer, Word2Vec
 from pyspark.ml.classification import LinearSVC, NaiveBayes
+from pyspark.ml.regression import LinearRegression, LogisticRegression
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 
 import json
@@ -41,6 +42,9 @@ if __name__ == '__main__':
 
     lines = ssc.socketTextStream("localhost", 6100)
 
+    # performing Word2Vec to obtain the vector representation of the words
+    word2Vec = Word2Vec(inputCol="message", outputCol="features")
+
     # performing Tf-idf to obtain features of messages
     tokenizer = Tokenizer(inputCol="message", outputCol="words")
     hashingTF = HashingTF(
@@ -55,7 +59,15 @@ if __name__ == '__main__':
     # naviebayes pipeline
     naivebayes = NaiveBayes(featuresCol="features", labelCol="label",
                             predictionCol="prediction", smoothing=1.0, modelType="multinomial")
-    naive_pipe = Pipeline(stages=[tokenizer, hashingTF, idf, naivebayes])
+    naive_pipe = Pipeline(stages=[word2Vec, naivebayes])
+
+    # linear regression
+    lr = LinearRegression(featuresCol="features", labelCol="label", predictionCol="prediction")
+    lr_pipeline = Pipeline(stages=[word2Vec, lr])
+
+    # logistic regression
+    logReg = LogisticRegression(featuresCol="features", labelCol="label", predictionCol="prediction")
+    logReg_pipeline = Pipeline(stages=[tokenizer, hashingTF, idf, logReg])
 
     lines.foreachRDD(rddstream)
 
