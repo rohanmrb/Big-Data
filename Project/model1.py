@@ -5,7 +5,7 @@ from pyspark.ml import Pipeline
 from pyspark.ml.feature import HashingTF, IDF, Tokenizer, Word2Vec
 from pyspark.ml.classification import LinearSVC, NaiveBayes
 from pyspark.ml.regression import LinearRegression, LogisticRegression
-from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+from pyspark.ml.evaluation import MulticlassMetrics
 
 import json
 
@@ -33,7 +33,12 @@ def rddstream(rdd):
     model2 = naive_pipe.fit(train_data)
     predictions2 = model2.transform(test_data)
 
-    print(predictions2.select("label", "prediction").show(1000))
+    metrics = MulticlassMetrics(predictions1.select("prediction", "label").rdd)
+    print("Accuracy for Model_1: " + str(metrics.accuracy))
+    print("Confusion Matrix for Model_1: ")
+    metrics.confusionMatrix().show()
+
+    # print(predictions2.select("label", "prediction").show(1000))
 
 
 if __name__ == '__main__':
