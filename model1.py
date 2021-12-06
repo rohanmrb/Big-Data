@@ -3,9 +3,9 @@ from pyspark.sql import SQLContext
 from pyspark.streaming import StreamingContext
 from pyspark.ml import Pipeline
 from pyspark.ml.feature import HashingTF, IDF, Tokenizer, Word2Vec
-from pyspark.ml.classification import LinearSVC, NaiveBayes
-from pyspark.ml.regression import LinearRegression, LogisticRegression
-from pyspark.ml.evaluation import MulticlassMetrics
+from pyspark.ml.classification import LinearSVC, NaiveBayes, LogisticRegression
+from pyspark.ml.regression import LinearRegression
+from pyspark.mllib.evaluation import MulticlassMetrics
 
 import json
 
@@ -27,16 +27,24 @@ def rddstream(rdd):
 
     train_data, test_data = data.randomSplit([0.70, 0.30], 1234)
 
-    model1 = pipeline.fit(train_data)
-    predictions1 = model1.transform(test_data)
+    #model1 = pipeline.fit(train_data)
+    #predictions1 = model1.transform(test_data)
 
-    model2 = naive_pipe.fit(train_data)
-    predictions2 = model2.transform(test_data)
+    #model2 = naive_pipe.fit(train_data)
+    #predictions2 = model2.transform(test_data)
 
-    metrics = MulticlassMetrics(predictions1.select("prediction", "label").rdd)
-    print("Accuracy for Model_1: " + str(metrics.accuracy))
+    model3 = logReg_pipeline.fit(train_data)
+    model3.write().overwrite().save('log_model')
+    # predictions3 = model3.transform(test_data)
+
+
+    #metrics1 = MulticlassMetrics(predictions1.select("prediction", "label").rdd)
+    #print("Accuracy for Model_1: " + str(metrics1.accuracy))
     print("Confusion Matrix for Model_1: ")
-    metrics.confusionMatrix().show()
+    #metrics1.confusionMatrix().show()
+
+    metrics3 = MulticlassMetrics(predictions3.select("prediction", "label").rdd)
+    print("Accuracy for Model_3: " + str(metrics3.accuracy))
 
     # print(predictions2.select("label", "prediction").show(1000))
 
@@ -62,13 +70,13 @@ if __name__ == '__main__':
     pipeline = Pipeline(stages=[tokenizer, hashingTF, idf, svm])
 
     # naviebayes pipeline
-    naivebayes = NaiveBayes(featuresCol="features", labelCol="label",
-                            predictionCol="prediction", smoothing=1.0, modelType="multinomial")
-    naive_pipe = Pipeline(stages=[word2Vec, naivebayes])
+    #naivebayes = NaiveBayes(featuresCol="features", labelCol="label",
+    #                        predictionCol="prediction", smoothing=1.0, modelType="multinomial")
+    #naive_pipe = Pipeline(stages=[word2Vec, naivebayes])
 
     # linear regression
-    lr = LinearRegression(featuresCol="features", labelCol="label", predictionCol="prediction")
-    lr_pipeline = Pipeline(stages=[word2Vec, lr])
+    #lr = LinearRegression(featuresCol="features", labelCol="label", predictionCol="prediction")
+    #lr_pipeline = Pipeline(stages=[word2Vec, lr])
 
     # logistic regression
     logReg = LogisticRegression(featuresCol="features", labelCol="label", predictionCol="prediction")
