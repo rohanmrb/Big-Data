@@ -4,3 +4,7 @@ Project/dataset
 spam
 stream.py
 Assignments
+output*
+*.pkl
+cv_*
+tfidf_*
