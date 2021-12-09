@@ -89,7 +89,7 @@ if __name__ == '__main__':
     sc = SparkContext(master="local[2]", appName="streamtest")
     ssc = StreamingContext(sc, 5)
 
-    kmeans = MiniBatchKMeans(n_clusters=2, reassignment_ratio=1)
+    kmeans = MiniBatchKMeans(n_clusters=2, reassignment_ratio=0.01)
     lines = ssc.socketTextStream("localhost", 6100)
  
     lines.map( lambda x : x.split('\n'))
