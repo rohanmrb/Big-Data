@@ -1,4 +1,4 @@
-# big-data-installs
+# BIG-DATA-INSTALL
 Installing Hadoop and Spark on Linux for running this project 
 
 # Installing Hadoop and Spark
