@@ -8,3 +8,4 @@ output*
 *.pkl
 cv_*
 tfidf_*
+US_ACCIDENT_DATA_5PERCENT.json
