@@ -21,3 +21,8 @@ Then run the following commands to install the required tools.
 ```bash
 . spark.sh
 ```
+
+## Requirements 
+```
+pip install -r requirements.txt
+```

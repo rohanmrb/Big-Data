@@ -12,7 +12,6 @@ from pyspark.ml.feature import StopWordsRemover
 from sklearn.linear_model import SGDClassifier, SGDRegressor
 import json
 
-
 def rddstream(rdd):
     rdd1 = rdd.flatMap(lambda x: (json.loads(x)).items())
     rdd2 = (rdd1.map(lambda x: (x[0], tuple(x[1].values()))))
@@ -67,6 +66,7 @@ def rddstream(rdd):
     # name_list = ['cv', 'tfidf']
     Model_List = [M_NB, B_NB, SGD_clas]
 
+
     X = X_tfidf   #OR X_cv
     k = "tfidf"
  
@@ -105,7 +105,7 @@ def rddstream(rdd):
                 model_1 = model.partial_fit(X=X,y=Y_label)
                 with open(path, "wb") as f:
                     pickle.dump(model, f)
-    print("_____________________________")
+    print("________iteration_of_for_loop___________")
                 
 
 if __name__ == '__main__':
