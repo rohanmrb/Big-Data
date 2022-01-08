@@ -11,12 +11,10 @@
 ## Project
 This repository contains source code for the following projects:
 
-### 1] Analysis of Earth Surface Temperature using Spark
-### 2] Implementation of Page Rank Algorithm with Embeddings for Wikipedia using Hadoop
-### 3] Analysis of US Road Accident Data using Hadoop
-### 4] Classification of Spam and Ham Emails using Spark Machine Learning 
-
-<br>
+#### 1] Analysis of Earth Surface Temperature using Spark
+#### 2] Implementation of Page Rank Algorithm with Embeddings for Wikipedia using Hadoop
+#### 3] Analysis of US Road Accident Data using Hadoop
+#### 4] Classification of Spam and Ham Emails using Spark Machine Learning 
 <br>
 
 # Usage
